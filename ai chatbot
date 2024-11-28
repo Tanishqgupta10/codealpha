@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include <regex>
+
+// Function to perform sentiment analysis (basic implementation)
+std::string analyze_sentiment(const std::string& input) {
+    std::string text = input;
+    std::transform(text.begin(), text.end(), text.begin(), ::tolower);
+
+    // Simple sentiment analysis based on keywords
+    if (text.find("happy") != std::string::npos || text.find("good") != std::string::npos) {
+        return "positive";
+    } else if (text.find("sad") != std::string::npos || text.find("bad") != std::string::npos) {
+        return "negative";
+    } else {
+        return "neutral";
+    }
+}
+
+// Function to handle complex question answering
+std::string answer_question(const std::string& question) {
+    std::string q = question;
+    std::transform(q.begin(), q.end(), q.begin(), ::tolower);
+
+    if (q.find("your name") != std::string::npos) {
+        return "I am your friendly AI chatbot.";
+    } else if (q.find("weather") != std::string::npos) {
+        return "I am not connected to a weather service, but I suggest checking an online source.";
+    } else if (q.find("capital of france") != std::string::npos) {
+        return "The capital of France is Paris.";
+    } else {
+        return "Sorry, I don't understand that question.";
+    }
+}
+
+// Simple Dialogue Management
+class DialogueManager {
+private:
+    std::map<std::string, std::string> conversationHistory;
+    
+public:
+    void start_conversation() {
+        std::cout << "Chatbot: Hello! How can I assist you today?" << std::endl;
+    }
+
+    void process_input(const std::string& input) {
+        // Basic sentiment analysis
+        std::string sentiment = analyze_sentiment(input);
+        std::cout << "Chatbot: I detect that you're feeling " << sentiment << " right now." << std::endl;
+
+        // Handling complex questions
+        std::string response = answer_question(input);
+        
+        // Record conversation history
+        conversationHistory[input] = response;
+
+        std::cout << "Chatbot: " << response << std::endl;
+    }
+};
+
+int main() {
+    DialogueManager chatbot;
+    chatbot.start_conversation();
+
+    std::string user_input;
+    while (true) {
+        std::cout << "You: ";
+        std::getline(std::cin, user_input);
+
+        // Exit condition
+        if (user_input == "exit") {
+            std::cout << "Chatbot: Goodbye!" << std::endl;
+            break;
+        }
+
+        // Process the user input
+        chatbot.process_input(user_input);
+    }
+
+    return 0;
+}
+
